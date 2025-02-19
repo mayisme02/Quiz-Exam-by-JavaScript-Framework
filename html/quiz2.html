@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.7.4/dist/vuetify.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.7.4/dist/vuetify.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" type="text/css" href="css/quiz2.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai+Looped:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">  
+    <title>Quiz 2</title>
+</head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <div class="pa-4 bg-primary1">แบบทดสอบ</div>
+            <!-- Page 1: Start Page -->
+            <div v-if="page === 1" class="pa-4 text-center">
+                <p>ยินดีต้อนรับสู่แบบทดสอบของเรา! คลิกปุ่มด้านล่างเพื่อเริ่มทำแบบทดสอบ</p> <br>
+                <v-btn color="primary1" @click="page = 2">เริ่มทำแบบทดสอบ</v-btn>
+            </div>
+
+            <!-- Page 2: Quiz Page -->
+            <div v-if="page === 2">
+                <div v-for="(q, i) in qlist" :key="i" class="my-2 pa-4 border-info">
+                    <div>ข้อที่ {{ i + 1 }}</div>
+                    <div v-html="q.title" class="pa-2"></div>
+                    <v-radio-group v-model="answers[i]" class="mt-2">
+                        <!-- ใช้ v-for เพื่อสร้าง v-radio สำหรับแต่ละตัวเลือก -->
+                        <div v-for="(option, idx) in q.options" :key="idx">
+                            <v-radio :label="`${idx + 1}. ${option}`" :value="idx + 1" class="mt-1">
+                            </v-radio>
+                        </div>
+                    </v-radio-group>
+                </div>
+
+                <div class="position-sticky bottom-0 pa-4 bg-primary1">
+                    <v-btn color="success" v-if="validate()" @click="grading"><v-icon>mdi-check</v-icon>
+                        ตรวจคำตอบ</v-btn>
+                    <div v-else>กรุณาตอบให้ครบ</div>
+                </div>
+            </div>
+
+            <!-- Page 3: Result Page -->
+            <div v-if="page === 3" class="pa-4 text-center">
+                <h2>คุณได้คะแนน {{ score }} / {{ qlist.length }}</h2> <br>
+                <v-btn color="primary1" @click="resetQuiz">ทำแบบทดสอบอีกครั้ง</v-btn>
+            </div>
+        </v-app>
+    </div>
+
+    <script>
+        var quizlist = [
+            {
+                "title": "ลำธารไหลผ่านหมู่บ้านแห่งหนึ่ง เป็นลำธารที่สำคัญที่ช่วยหล่อเลี้ยงชีวิตของผู้คนในหมู่บ้าน ลำธารมีสีน้ำที่ใสสะอาด จนสามารถสังเกตเห็นก้อนกรวดใต้ลำธารได้ชัดเจน ภายในลำธารพบสิ่งมีชีวิตมากมาย ไม่ว่าจะเป็นปลาหลากชนิดที่แหวกว่าย เหงือกขยับคอยรับออกซิเจนจากน้ำ บ้างก็หลบอยู่ใต้หินเพื่อรอเหยื่อ หอยน้ำจืดหลากสีที่กำลังคืบคลานหาอาหารริมลำธาร ตัวอ่อนแมลงปอที่อำพลางตัวจนกลมกลืนกับพืชน้ำเพื่อหลบผู้ล่า <br>คำว่า ลำธาร ในข้อความมีความสอดคล้องข้อใดมากที่สุด",
+                "options": [
+                    "ประชากร",
+                    "แหล่งที่อยู่",
+                    "ชีวภูมิภาค",
+                    "ระบบนิเวศ",
+                    "กลุ่มสิ่งมีชีวิต"
+                ],
+                "answer": 4
+            },
+            {
+                "title": "10+15=?",
+                "options": [
+                    "15",
+                    "20",
+                    "25",
+                    "30",
+                    "35"
+                ],
+                "answer": 3
+            },
+            {
+                "title": "5x6=",
+                "options": [
+                    "11",
+                    "20",
+                    "30",
+                    "40",
+                    "50"
+                ],
+                "answer": 3
+            },
+            {
+                "title": "3 x 7 = ?",
+                "options": [
+                    "18",
+                    "20",
+                    "21",
+                    "23",
+                    "24"
+                ],
+                "answer": 3
+            },
+            {
+                "title": "ประเทศไทยมีจำนวนจังหวัดทั้งหมดกี่จังหวัด?",
+                "options": [
+                    "72",
+                    "76",
+                    "80",
+                    "89",
+                    "90"
+                ],
+                "answer": 2
+            },
+            {
+                "title": "มนุษย์อยู่ในกลุ่มใดของสิ่งมีชีวิต?",
+                "options": [
+                    "สัตว์เลี้ยงลูกด้วยนม",
+                    "สัตว์สะเทินน้ำสะเทินบก",
+                    "สัตว์ปีก",
+                    "ปลา",
+                    "แมลง"
+                ],
+                "answer": 1
+            },
+            {
+                "title": "ค่าของ π (ไพ) ประมาณเท่าไหร่?",
+                "options": [
+                    "3.14",
+                    "3.00",
+                    "3.10",
+                    "3.00",
+                    "3.15"
+                ],
+                "answer": 1
+            },
+            {
+                "title": "ผลรวมของ 20 + 35 คือ?",
+                "options": [
+                    "45",
+                    "55",
+                    "65",
+                    "75",
+                    "85"
+                ],
+                "answer": 2
+            },
+            {
+                "title": "คำใดที่ไม่ใช่คำกริยา?",
+                "options": [
+                    "วิ่ง",
+                    "ขึ้น",
+                    "บ้าน",
+                    "กิน",
+                    "อ่าน"
+                ],
+                "answer": 3
+            },
+            {
+                "title": "หน่วยที่ใช้วัดปริมาณน้ำคืออะไร?",
+                "options": [
+                    "กิโลเมตร",
+                    "ลิตร",
+                    "กรัม",
+                    "เซนติเมตร",
+                    "ตารางเมตร"
+                ],
+                "answer": 2
+            },
+            {
+                "title": "จงเลือกคำที่มีเสียงวรรณยุกต์สูงสุด",
+                "options": [
+                    "พี่",
+                    "ไป",
+                    "ม้า",
+                    "ปลา",
+                    "บัว"
+                ],
+                "answer": 1
+            },
+            {
+                "title": "ใครเป็นผู้เขียนหนังสือ 'รามเกียรติ์'?",
+                "options": [
+                    "ท่านเจ้าคุณพระยา",
+                    "พระมหากษัตริย์",
+                    "พระเจ้าอยู่หัว",
+                    "พระสังฆราช",
+                    "พระยาอนุมาศ"
+                ],
+                "answer": 1
+            },
+            {
+                "title": "สีใดเป็นสีหลักของธงชาติไทย?",
+                "options": [
+                    "แดง",
+                    "ขาว",
+                    "น้ำเงิน",
+                    "เขียว",
+                    "เหลือง"
+                ],
+                "answer": 1
+            },
+            {
+                "title": "คำว่า 'การผลิต' หมายถึงอะไร?",
+                "options": [
+                    "การสร้างสิ่งของ",
+                    "การทำการค้าขาย",
+                    "การเตรียมการ",
+                    "การซื้อขาย",
+                    "การสร้างงานศิลปะ"
+                ],
+                "answer": 1
+            },
+            {
+                "title": "การเดินทางที่ใช้เวลาเร็วที่สุดคือการใช้?",
+                "options": [
+                    "จักรยาน",
+                    "รถยนต์",
+                    "เรือ",
+                    "เครื่องบิน",
+                    "มอเตอร์ไซค์"
+                ],
+                "answer": 4
+            },
+            {
+                "title": "คำที่มีความหมายตรงข้ามกับคำว่า 'สูง' คือคำใด?",
+                "options": [
+                    "ยาว",
+                    "ต่ำ",
+                    "ใหญ่",
+                    "เล็ก",
+                    "หนัก"
+                ],
+                "answer": 2
+            },
+            {
+                "title": "ดาวเคราะห์ที่อยู่ใกล้ดวงอาทิตย์ที่สุดคือดาวเคราะห์ใด?",
+                "options": [
+                    "พุธ",
+                    "ศุกร์",
+                    "โลก",
+                    "อังคาร",
+                    "ดาวเสาร์"
+                ],
+                "answer": 1
+            },
+            {
+                "title": "สิ่งใดที่เป็นตัวนำความร้อนที่ดี?",
+                "options": [
+                    "น้ำ",
+                    "ไม้",
+                    "ทองแดง",
+                    "พลาสติก",
+                    "แก้ว"
+                ],
+                "answer": 3
+            },
+            {
+                "title": "คำว่า 'เศรษฐกิจ' หมายถึงอะไร?",
+                "options": [
+                    "การศึกษาระดับสูง",
+                    "การผลิตและการบริโภคสินค้า",
+                    "การขับเคลื่อนทางการเมือง",
+                    "การดูแลสุขภาพ",
+                    "การท่องเที่ยว"
+                ],
+                "answer": 2
+            },
+            {
+                "title": "คำที่เหมือนกับ 'ดินแดน' คือคำใด?",
+                "options": [
+                    "เมือง",
+                    "ประเทศ",
+                    "ภูมิภาค",
+                    "แหล่ง",
+                    "พื้นที่"
+                ],
+                "answer": 2
+            }
+        ];
+        const { createApp } = Vue;
+        const { createVuetify } = Vuetify;
+
+        const vuetify = createVuetify();
+
+        const app = createApp({
+            data() {
+                return {
+                    qlist: quizlist,
+                    answers: [],
+                    score: 0,
+                    page: 1,
+                };
+            },
+            methods: {
+                validate() {
+                    return this.answers.length === this.qlist.length && this.answers.every(a => a !== undefined);
+                },
+                grading() {
+                    this.score = this.answers.reduce((acc, answer, idx) => {
+                        return acc + (answer === this.qlist[idx].answer ? 1 : 0);
+                    }, 0);
+                    this.page = 3;
+                },
+                resetQuiz() {
+                    this.answers = [];
+                    this.score = 0;
+                    this.page = 1;
+                }
+            }
+        });
+
+        app.use(vuetify).mount('#app');
+    </script>
+</body>
+
+</html>
