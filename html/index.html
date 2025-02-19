@@ -1,35 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.7.4/dist/vuetify.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.7.4/dist/vuetify.min.js"></script>
     <title>SC310006 Mobile and Web Application Development</title>
     <link rel="stylesheet" type="text/css" href="../css/index.css" />
 </head>
+
+
 <body>
-    <h1>วิชา SC310006 Mobile and Web Application Development</h1>
-    <div class="container">
-        <div class="card">
-            <h2>ข้อสอบชุดที่ 1</h2>
-            <a href="quiz1.html">ข้อสอบวิชาคณิตศาสตร์ ม.1</a>
-        </div>
-        <div class="card">
-            <h2>ข้อสอบชุดที่ 2</h2>
-            <a href="work2.html">ดูรายละเอียด</a>
-        </div>
-        <div class="card">
-            <h2>ข้อสอบชุดที่ 3</h2>
-            <a href="work3.html">ดูรายละเอียด</a>
-        </div>
-        <div class="card">
-            <h2>ข้อสอบชุดที่ 4</h2>
-            <a href="work4.html">ดูรายละเอียด</a>
-        </div>
-        <div class="card">
-            <h2>ข้อสอบชุดที่ 5</h2>
-            <a href="work4.html">ดูรายละเอียด</a>
-        </div>
+    <div id="app">
+        <v-app>
+            <v-container>
+                <h1>Quiz Exam By JavaScript Framwork</h1>
+                <v-row>
+                    <v-col v-for="(quiz, index) in quizzes" :key="index" cols="12" md="3">
+                        <v-card>
+                            <v-card-title>{{ quiz.title }}</v-card-title>
+                            <v-card-actions>
+                                <v-btn :href="quiz.link" color="primary">ดูรายละเอียด</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-container>
+            <footer class="text-center">By Manitchaya Thamanunpongsa, Computer Science</footer>
+        </v-app>
     </div>
-    <footer>โดย นางสาวมณิฐชญาณ์ ธมนันท์พงษา 653380323-8 sec2 cs</footer>
+
+    <script>
+        const { createApp } = Vue;
+        const { createVuetify } = Vuetify;
+
+        const vuetify = createVuetify();
+
+        const app = createApp({
+            data() {
+                return {
+                    quizzes: [
+                        { title: 'Vue.JS', link: 'quiz1.html' },
+                        { title: 'Vue.JS', link: 'quiz2.html' },
+                        { title: 'React', link: 'quiz3.html' },
+                        { title: 'Firebase', link: 'login.html' }
+                    ]
+                };
+            }
+        });
+
+        app.use(vuetify).mount('#app');
+    </script>
 </body>
 </html>

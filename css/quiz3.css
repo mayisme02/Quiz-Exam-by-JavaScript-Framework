@@ -1,0 +1,25 @@
+body {
+    background-color: rgb(242, 251, 255);
+}
+.choice-option {
+    margin-bottom: 15px; /* เพิ่มระยะห่างระหว่างตัวเลือก */
+}
+.choice-option input[type="radio"] {
+    margin-right: 10px; /* เพิ่มระยะห่างระหว่าง radio button และตัวเลือก */
+}
+.btn-spacing {
+    margin-top: 20px; /* เพิ่มระยะห่างจากตัวเลือกไปยังปุ่ม */
+}
+.card-header {
+    background-color: rgb(86, 130, 200);
+    color: white;
+}
+.btn-secondary, .btn-primary {
+    background-color: rgb(63, 147, 38);
+    border: solid rgb(63, 147, 38);
+    color: white;
+}
+.btn-secondary:hover, .btn-primary:hover {
+    background-color: rgb(78, 164, 52);
+    border: solid rgb(78, 164, 52);
+}

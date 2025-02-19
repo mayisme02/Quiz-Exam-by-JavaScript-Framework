@@ -10,18 +10,18 @@
 }
 
 .bg-primary1 {
-    background-color: #7b3f98 !important;
+    background-color: #4a90e2 !important;
     color: #ffffff;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .primary1 {
-    background-color: #7b3f98
+    background-color: #4a90e2;
 }
 
 .border-info {
-    border: 1px solid #7b3f98;
+    border: 1px solid #4a90e2;
 
     border-radius: 5px;
     background-color: #ffffff;
@@ -29,25 +29,25 @@
 }
 
 .v-btn {
-    background-color: #7b3f98;
+    background-color: #4a90e2;
     color: #ffffff;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .v-btn:hover {
-    background-color: #5a2d77;
+    background-color: #4a90e2;
 }
 
 .v-radio {
-    background-color: #e9d8f3;
+    background-color: #d2f1ff;
     border-radius: 5px;
     padding: 8px;
     margin-bottom: 4px;
 }
 
 .v-radio:hover {
-    background-color: #d6c1e3;
+    background-color: #d2f1ff;
     cursor: pointer;
 }
 
@@ -56,5 +56,5 @@
 }
 
 .v-radio .v-input--selection-controls__ripple {
-    background-color: #7b3f98;
+    background-color: #4a90e2;
 }
